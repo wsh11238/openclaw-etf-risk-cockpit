@@ -1,45 +1,59 @@
-# OpenClaw ETF Risk Cockpit | ETF 风控驾驶舱
+# OpenClaw ETF 风控驾驶舱
 
-A static ETF risk cockpit for portfolio review, risk scoring, stress testing, backtest entry points, and weekly report previews.
+一个纯前端 ETF 组合风控系统，把资产风险评分、组合体检、低估雷达、压力测试、回测入口、数据状态和周报预览集中到一个静态驾驶舱。
 
-一个纯前端 ETF 风控驾驶舱：把资产风险评分、组合体检、低估雷达、压力测试、回测入口和周报预览放进同一个界面。
+**English introduction:** [README_EN.md](README_EN.md)
 
-![ETF risk cockpit preview](docs/screenshot.png)
-
+![项目预览](docs/screenshot.png)
 
 ## 页面截图
 
-下面两张图都是从本仓库真实页面生成的中文截图，方便快速判断项目实际效果。
+下面两张图都来自本仓库真实页面渲染：第一张展示首屏效果，第二张展示继续滚动后的功能内容。
 
-| 页面截图 1 | 页面截图 2 |
+| 首屏截图 | 第二屏截图 |
 |---|---|
-| ![真实中文网页截图 1](docs/screenshot-2.png) | ![真实中文网页截图 2](docs/screenshot-3.png) |
+| ![真实中文网页首屏](docs/screenshot-2.png) | ![真实中文网页第二屏](docs/screenshot-3.png) |
 
-## Why Star This | 为什么值得 Star
+## 系统功能总览
 
-- Shows how to design a dense but readable investment operations dashboard.
-- Pure static deployment: no server required for the demo baseline.
-- Good reference for risk tables, portfolio workflows, scorecards, filters, and report previews.
-- 对投研工具、基金组合管理、资产配置学习项目都很容易改造。
+这个系统面向 ETF 组合管理和投研复盘场景。它把资产列表、风险评分、目标仓位、数据置信度、组合导入、压力测试、低估雷达和周报预览做成一个可以直接部署的纯前端页面，适合学习金融工具的界面组织方式。
 
-## What Is Inside | 项目内容
+## 核心功能
 
-- `index.html`: full static cockpit interface.
-- `assets_data.js`: manually maintained asset data baseline.
-- `docs/screenshot.png`: repository preview image.
+- **风险仪表盘**：展示资产数、平均风险、平均置信度、防守资产、复核资产、预警数量和冲突数量。
+- **资产风险总表**：按资产、类型、风险分数、置信度、目标仓位、信号、警告等字段展示 ETF 风险。
+- **搜索与排序**：支持搜索资产，并通过表格字段进行浏览和比较。
+- **资产详情侧栏**：点击资产后查看具体说明、指标、预警和风险解释。
+- **组合体检**：提供组合导入和组合风险评估入口，适合检查持仓结构。
+- **低估雷达**：保留寻找低估或可关注资产的工作流入口。
+- **压力测试**：用于观察不同市场压力情境下的组合风险。
+- **回测中心**：作为回测流程入口，方便继续接入历史数据和策略验证。
+- **周报预览**：把组合状态和资产风险组织成可阅读的报告视图。
+- **数据状态面板**：展示数据时间、版本、来源状态和手动更新提示。
+- **纯静态部署**：核心页面只依赖 `index.html` 和 `assets_data.js`，可以部署到任意静态平台。
 
-## Best Use Cases | 适合做什么
+## 适合改造成什么
 
-- ETF portfolio review
-- Risk-control dashboards
-- Investment research prototypes
-- Static finance tools
-- ETF 组合体检、资产风险监控、投研驾驶舱、金融工具原型
+- ETF 组合体检工具
+- 资产配置风控看板
+- 基金投研驾驶舱
+- 投资周报生成页面
+- 金融产品原型和课程案例
 
-## Quick Start | 快速开始
+## 目录说明
 
-Open `index.html` directly in a browser, or deploy the folder to any static hosting platform.
+- `index.html`：完整 ETF 风控驾驶舱界面。
+- `assets_data.js`：手动维护的资产数据样例。
+- `docs/`：项目截图和展示图片。
 
-## Public Safety | 公开安全说明
+## 快速开始
 
-Private deployment URLs, tokens, local state, and hosting identifiers were removed before publication.
+直接打开 `index.html`，或部署到任意静态托管平台。
+
+## 公开安全说明
+
+这个公开版本已经移除真实部署地址、生产密钥、Cloudflare token、本地环境文件、日志、`.wrangler`、`node_modules` 和任何不适合公开的私有信息。你可以放心把它当作学习、参考和二次开发的起点。
+
+## 推荐 Star 的理由
+
+如果你正在做类似产品，这个仓库不是只能看一眼的截图，而是能直接 Fork 的结构样板：页面、数据、组件、交互和说明文档都已经整理好，可以节省从 0 到 1 搭骨架的时间。
