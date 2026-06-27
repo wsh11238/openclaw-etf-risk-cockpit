@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ETF 风控驾驶舱 6.1 静态版</title>
+  <style>
+    :root{--bg:#f4f6fb;--card:#fff;--text:#101828;--muted:#667085;--line:#e4e7ec;--blue:#2563eb;--green:#16a34a;--yellow:#ca8a04;--orange:#ea580c;--red:#dc2626;--darkred:#4c0519;--purple:#7e22ce;--shadow:0 10px 28px rgba(16,24,40,.08)}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;color:var(--text)}
+    .app{max-width:1560px;margin:0 auto;padding:22px}.hero{border-radius:24px;padding:28px;color:#fff;background:linear-gradient(135deg,#020617,#172554 52%,#7c2d12);box-shadow:0 18px 48px rgba(15,23,42,.24);margin-bottom:18px}
+    .hero h1{margin:0 0 10px;font-size:34px;letter-spacing:-.04em}.hero p{margin:0;max-width:1180px;line-height:1.75;color:#dbeafe}
+    .notice{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;border-radius:18px;padding:14px;margin-bottom:16px;line-height:1.7;font-size:14px}
+    .tabs{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}.tab{border:1px solid var(--line);background:#fff;border-radius:999px;padding:10px 14px;font-weight:900;cursor:pointer}.tab.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+    button,input,select,textarea{border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px 12px;font-size:14px;color:var(--text)}button{cursor:pointer;font-weight:800}.primary{background:var(--blue);border-color:var(--blue);color:#fff}
+    .summary{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:12px;margin-bottom:18px}.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:var(--shadow);min-width:0}.metric-title{color:var(--muted);font-size:13px;margin-bottom:8px}.metric-value{font-size:27px;font-weight:950;word-break:break-word}.metric-sub{color:var(--muted);font-size:13px;margin-top:8px;line-height:1.5}
+    .grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(470px,.9fr);gap:18px;align-items:start}h2,h3{margin:0 0 12px;letter-spacing:-.03em}.note{color:var(--muted);font-size:13px;line-height:1.7;margin:0 0 12px}.toolbar{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:12px 0}
+    .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:16px;background:#fff}table{width:100%;min-width:1260px;border-collapse:collapse;table-layout:fixed}th,td{border-bottom:1px solid var(--line);padding:11px 10px;font-size:13px;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}th{background:#f8fafc;color:var(--muted);font-size:12px;font-weight:900;position:sticky;top:0}tr:hover td{background:#f8fafc}tr.selected td{background:#eff6ff!important}.asset-name{font-weight:900;cursor:pointer;color:#0f172a}
+    .pill{display:inline-flex;border-radius:999px;padding:5px 9px;font-size:12px;font-weight:900}.green{background:#dcfce7;color:var(--green)}.yellow{background:#fef9c3;color:var(--yellow)}.orange{background:#ffedd5;color:var(--orange)}.red{background:#fee2e2;color:var(--red)}.darkred{background:var(--darkred);color:#fff}.purple{background:#f3e8ff;color:var(--purple)}.type{background:#f1f5f9;color:#334155}.gray{background:#f1f5f9;color:#475569}
+    .bar{display:inline-block;width:108px;height:10px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin-right:8px;vertical-align:middle}.bar span{display:block;height:100%;background:linear-gradient(90deg,#22c55e,#eab308,#f97316,#dc2626,#4c0519)}
+    .opgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:12px 0 16px}.op{border:1px solid var(--line);border-radius:16px;background:#f8fafc;padding:12px}.op .label{color:var(--muted);font-size:12px}.op .value{font-size:21px;font-weight:950;margin-top:5px}
+    .evidence{border:1px solid var(--line);border-radius:16px;padding:14px;background:#fff;margin:14px 0}.evidence ul{margin:8px 0 0;padding-left:20px;line-height:1.75;font-size:13px}.evidence strong{color:#111827}
+    .hidden{display:none}.section{display:none}.section.active{display:block}.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}.source-table{min-width:900px}.source-table th,.source-table td{font-size:12px}.scroll{overflow:auto;border:1px solid var(--line);border-radius:16px;background:#fff}
+    textarea{width:100%;min-height:260px;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;line-height:1.5}.report{white-space:pre-wrap;background:#0f172a;color:#e5e7eb;border-radius:16px;padding:16px;line-height:1.7;overflow:auto}
+    .data-status{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:12px 0}.status-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px}.status-card strong{display:block;font-size:20px;margin-top:4px}
+    .update-info{background:#f0fdf4;border:1px solid #bbf7d0;color:#166534;border-radius:12px;padding:12px;margin-bottom:16px;font-size:13px}
+    .sort-icon{color:#94a3b8;font-size:10px;margin-left:2px}
+    th:hover .sort-icon{color:#2563eb}
+    @media(max-width:1200px){.summary,.grid,.two,.data-status{grid-template-columns:1fr}.opgrid{grid-template-columns:1fr 1fr}}@media(max-width:720px){.app{padding:12px}.hero h1{font-size:26px}.opgrid{grid-template-columns:1fr}}
+  </style>
+<script src="assets_data.js"></script>
+</head>
+<body>
+<div class="app">
+  <section class="hero">
+    <h1>ETF 风控驾驶舱 6.1｜静态版</h1>
+    <p>本版本为纯前端静态部署，数据来源为手动配置的 assets.json。每次更新数据需修改 JSON 文件并重新部署。</p>
+  </section>
+
+  <div class="notice">
+    ⚠️ 本版本依赖手动数据更新。如需实时数据，请参考原版 Python 后端项目（需要服务器环境运行）。
+  </div>
+  <div class="update-info" id="updateInfo">
+    数据更新时间：<span id="dataTime">-</span> | 版本：<span id="version">6.1.0</span>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="dashboard">风险仪表盘</button>
+    <button class="tab" data-tab="portfolio">组合体检</button>
+    <button class="tab" data-tab="low">低估雷达</button>
+    <button class="tab" data-tab="stress">压力测试</button>
+    <button class="tab" data-tab="backtest">回测中心</button>
+    <button class="tab" data-tab="report">周报预览</button>
+  </div>
+
+  <section id="dashboard" class="section active">
+    <div class="toolbar">
+      <div><button class="primary" id="refreshBtn">刷新数据</button> <input id="search" placeholder="搜索资产"/></div>
+      <div class="note" id="status">已加载</div>
+    </div>
+
+    <section class="summary">
+      <div class="card"><div class="metric-title">资产数</div><div class="metric-value" id="assetCount">-</div></div>
+      <div class="card"><div class="metric-title">平均风险</div><div class="metric-value" id="avgRisk">-</div></div>
+      <div class="card"><div class="metric-title">平均置信度</div><div class="metric-value" id="avgConf">-</div></div>
+      <div class="card"><div class="metric-title">减仓/防守</div><div class="metric-value" id="defenseCount">-</div></div>
+      <div class="card"><div class="metric-title">复核资产</div><div class="metric-value" id="reviewCount">-</div></div>
+      <div class="card"><div class="metric-title">预警数量</div><div class="metric-value" id="warningCount">-</div></div>
+      <div class="card"><div class="metric-title">冲突数量</div><div class="metric-value" id="conflictCount">-</div></div>
+    </section>
+
+    <main class="grid">
+      <section class="card">
+        <h2>资产风险总表</h2>
+        <p class="note">目标仓位改为"风险预算上限"。如果数据不足，会显示"暂停建议"。</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:125px;cursor:pointer" onclick="sortBy('name')">资产<span class="sort-icon">↕</span></th>
+                <th style="width:70px;cursor:pointer" onclick="sortBy('type')">类型<span class="sort-icon">↕</span></th>
+                <th style="width:145px;cursor:pointer" onclick="sortBy('riskScore')">风险分<span class="sort-icon">↕</span></th>
+                <th style="width:75px;cursor:pointer" onclick="sortBy('alert')">预警<span class="sort-icon">↕</span></th>
+                <th style="width:80px;cursor:pointer" onclick="sortBy('coverage')">覆盖率<span class="sort-icon">↕</span></th>
+                <th style="width:80px;cursor:pointer" onclick="sortBy('confidence')">置信度<span class="sort-icon">↕</span></th>
+                <th style="width:75px;cursor:pointer" onclick="sortBy('missing')">缺失<span class="sort-icon">↕</span></th>
+                <th style="width:75px;cursor:pointer" onclick="sortBy('conflict')">冲突<span class="sort-icon">↕</span></th>
+                <th style="width:85px">硬触发</th>
+                <th style="width:95px">风险预算</th><th style="width:90px">机会分</th><th style="width:130px">动作</th><th style="width:65px">估值</th><th style="width:65px">杠杆</th><th style="width:65px">情绪</th>
+              </tr>
+            </thead>
+            <tbody id="assetBody"></tbody>
+          </table>
+        </div>
+      </section>
+      <aside class="card" id="assetDetail">请点击左侧资产。</aside>
+    </main>
+  </section>
+
+  <section id="portfolio" class="section">
+    <div class="two">
+      <div class="card">
+        <h2>组合持仓导入</h2>
+        <p class="note">格式：asset,value,notes。每行一个资产。</p>
+        <textarea id="portfolioText" placeholder="沪深300,50000
+中证500,30000
+创业板指,20000"></textarea>
+        <button class="primary" id="savePortfolioBtn">保存并体检</button>
+      </div>
+      <div class="card">
+        <h2>组合风险摘要</h2>
+        <div id="portfolioSummary" class="note">等待加载。</div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:18px">
+      <h2>风险贡献与风险预算上限</h2>
+      <div class="table-wrap"><table><thead><tr><th>资产</th><th>市值</th><th>权重</th><th>风险分</th><th>预警</th><th>风险预算上限</th><th>建议调整</th><th>风险贡献</th></tr></thead><tbody id="portfolioBody"></tbody></table></div>
+    </div>
+  </section>
+
+  <section id="low" class="section">
+    <div class="card">
+      <h2>低估机会雷达</h2>
+      <p class="note">机会分基于估值、盈利、情绪和风险分综合计算。</p>
+      <div class="table-wrap"><table><thead><tr><th>资产</th><th>类型</th><th>机会分</th><th>风险分</th><th>预警</th><th>覆盖率</th><th>置信度</th><th>风险预算</th></tr></thead><tbody id="lowBody"></tbody></table></div>
+    </div>
+  </section>
+
+  <section id="stress" class="section">
+    <div class="card">
+      <h2>组合压力测试</h2>
+      <p class="note">压力测试为简化模型，用于理解组合可能回撤。</p>
+      <div class="table-wrap"><table><thead><tr><th>情景</th><th>预计损失</th><th>损失比例</th><th>主要影响资产</th></tr></thead><tbody id="stressBody"></tbody></table></div>
+    </div>
+  </section>
+
+  <section id="backtest" class="section">
+    <div class="two">
+      <div class="card">
+        <h2>回测中心</h2>
+        <textarea id="btInput">date,monthlyReturn%,riskScore
+2020-01,-2.5,35
+2020-02,-4.0,40
+2020-03,-8.5,45
+2020-04,7.2,42
+2020-05,4.1,46
+2020-06,6.6,52
+2020-07,9.8,61
+2020-08,3.5,65
+2020-09,-1.8,68
+2020-10,2.6,70
+2020-11,5.4,75
+2020-12,4.9,80
+2021-01,7.5,86
+2021-02,2.8,88
+2021-03,-5.6,84
+2021-04,-2.0,78
+2021-05,3.1,76
+2021-06,5.8,82
+2021-07,-7.3,84
+2021-08,-4.8,79
+2021-09,-3.2,72
+2021-10,1.5,68
+2021-11,-2.6,64
+2021-12,2.2,58
+2022-01,-6.8,55
+2022-02,-3.5,50
+2022-03,-7.2,48
+2022-04,-4.1,42
+2022-05,5.3,38
+2022-06,7.1,40</textarea>
+        <button class="primary" id="runBtBtn">运行回测</button>
+      </div>
+      <div class="card">
+        <h2>回测结果</h2>
+        <div id="btResult" class="note">等待运行。</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="report" class="section">
+    <div class="card">
+      <h2>每周投资体检报告预览</h2>
+      <button class="primary" id="reportBtn">生成周报</button>
+    </div>
+    <div class="card" style="margin-top:18px">
+      <div id="reportBox" class="report">等待生成。</div>
+    </div>
+  </section>
+</div>
+
+<script>
+// =============================================
+// ETF 风控驾驶舱 6.1 - 前端计算引擎
+// =============================================
+
+const VERSION = "6.1.0";
+const BUILD_TIME = "2026-06-15";
+
+// =============================================
+// 指标定义
+// =============================================
+const METRICS = [
+  {key: "pePct", label: "PE历史分位", weight: 10, module: "估值", tolerance: 8, maxAgeDays: 10},
+  {key: "pbPct", label: "PB历史分位", weight: 7, module: "估值", tolerance: 8, maxAgeDays: 10},
+  {key: "dividendYieldPct", label: "股息率历史分位", weight: 5, module: "估值", tolerance: 10, maxAgeDays: 10},
+  {key: "erp", label: "股权风险溢价ERP", weight: 8, module: "估值", tolerance: 0.6, maxAgeDays: 10},
+  {key: "marginFloat", label: "两融余额/流通市值", weight: 9, module: "杠杆", tolerance: 0.5, maxAgeDays: 7},
+  {key: "marginBuy", label: "融资买入额/成交额", weight: 8, module: "杠杆", tolerance: 1.2, maxAgeDays: 7},
+  {key: "leverageYoy", label: "两融余额同比增速", weight: 8, module: "杠杆", tolerance: 8, maxAgeDays: 7},
+  {key: "yield3m", label: "10年国债收益率3个月变化", weight: 7, module: "流动性", tolerance: 15, maxAgeDays: 7},
+  {key: "creditTrend", label: "社融/信用趋势变化", weight: 8, module: "流动性", tolerance: 0.8, maxAgeDays: 45},
+  {key: "policy", label: "政策/监管状态", weight: 5, module: "流动性", tolerance: 1, maxAgeDays: 30},
+  {key: "fundFlowPct", label: "ETF份额/资金流热度分位", weight: 8, module: "情绪", tolerance: 10, maxAgeDays: 7},
+  {key: "epsRevision", label: "3个月盈利预测修正", weight: 10, module: "盈利", tolerance: 3, maxAgeDays: 45},
+];
+
+// =============================================
+// 评分函数
+// =============================================
+function pctRisk(v) {
+  if (v < 50) return Math.round(v * 0.4);
+  if (v < 70) return Math.round(20 + (v - 50) * 1.0);
+  if (v < 85) return Math.round(40 + (v - 70) * 1.35);
+  if (v < 95) return Math.round(60 + (v - 85) * 2.5);
+  return Math.min(100, Math.round(85 + (v - 95) * 3));
+}
+
+function inversePctRisk(v) {
+  return Math.max(0, Math.min(100, 100 - pctRisk(v)));
+}
+
+function erpRisk(v) {
+  if (v >= 5) return 10;
+  if (v >= 3.5) return Math.round(20 + (5 - v) * 10);
+  if (v >= 2) return Math.round(40 + (3.5 - v) * 16);
+  if (v >= 1) return Math.round(70 + (2 - v) * 15);
+  return 95;
+}
+
+function creditRisk(v) {
+  if (v >= 2) return 10;
+  if (v >= 0) return Math.round(25 + (2 - v) * 7);
+  if (v >= -2) return Math.round(45 + (0 - v) * 10);
+  if (v >= -4) return Math.round(70 + (-2 - v) * 8);
+  return 92;
+}
+
+function epsRisk(v) {
+  if (v >= 5) return 10;
+  if (v >= 0) return Math.round(25 + (5 - v) * 3);
+  if (v >= -5) return Math.round(45 + (0 - v) * 5);
+  if (v >= -15) return Math.round(70 + (-5 - v) * 2);
+  return 95;
+}
+
+function piece(v, breaks) {
+  for (const [limit, score] of breaks) {
+    if (v < limit) return score;
+  }
+  return breaks[breaks.length - 1][1];
+}
+
+function getScoreFunc(metric) {
+  switch(metric) {
+    case "pePct": return pctRisk;
+    case "pbPct": return pctRisk;
+    case "fundFlowPct": return pctRisk;
+    case "dividendYieldPct": return inversePctRisk;
+    case "erp": return erpRisk;
+    case "creditTrend": return creditRisk;
+    case "epsRevision": return epsRisk;
+    case "marginFloat": return v => piece(v, [[2,15],[3,35],[4,60],[5,80],[999,95]]);
+    case "marginBuy": return v => piece(v, [[6,15],[9,35],[12,60],[15,80],[999,95]]);
+    case "leverageYoy": return v => piece(v, [[0,15],[20,35],[50,65],[100,85],[999,95]]);
+    case "yield3m": return v => piece(v, [[-30,10],[0,25],[50,60],[100,82],[999,95]]);
+    case "policy": return v => [10,30,55,80,95][Math.min(4, Math.max(0, Math.floor(v)))] || 30;
+    default: return () => null;
+  }
+}
+
+// =============================================
+// 数据处理
+// =============================================
+function now() {
+  return new Date().toISOString().split('T')[0] + 'T' + new Date().toTimeString().slice(0,5);
+}
+
+function safeFloat(v, def = null) {
+  const x = parseFloat(v);
+  return isNaN(x) ? def : x;
+}
+
+function parseDate(str) {
+  if (!str) return null;
+  const d = new Date(str);
+  return isNaN(d.getTime()) ? null : d;
+}
+
+function freshnessDays(timestamp) {
+  const dt = parseDate(timestamp);
+  if (!dt) return null;
+  const now = new Date();
+  now.setHours(0,0,0,0);
+  dt.setHours(0,0,0,0);
+  return Math.max(0, Math.floor((now - dt) / (1000 * 60 * 60 * 24)));
+}
+
+function confidenceAfterFreshness(conf, days, maxAge) {
+  if (days === null) return [Math.max(20, conf - 8), "unknown"];
+  if (days <= maxAge) return [conf, "fresh"];
+  if (days <= maxAge * 3) return [Math.max(30, conf - 15), "stale"];
+  return [Math.max(20, conf - 35), "very_stale"];
+}
+
+function weightedMedian(values) {
+  if (!values.length) return null;
+  values.sort((a, b) => a[0] - b[0]);
+  const total = values.reduce((s, v) => s + v[1], 0);
+  let mid = total / 2, run = 0;
+  for (const [v, w] of values) {
+    run += w;
+    if (run >= mid) return v;
+  }
+  return values[values.length - 1][0];
+}
+
+function consensus(metricKey, manualSources, metricCfg) {
+  const tolerance = metricCfg.tolerance || 10;
+  if (!manualSources || !manualSources.length) {
+    return {metric: metricKey, value: null, confidence: 0, status: "missing", spread: null, sources: [], message: "缺失数据"};
+  }
+  
+  const maxAge = metricCfg.maxAgeDays || 30;
+  const sources = manualSources.map(s => {
+    const days = freshnessDays(s.timestamp);
+    const [adjConf, status] = confidenceAfterFreshness(s.confidence, days, maxAge);
+    return {...s, freshnessDays: days, freshnessStatus: status, adjustedConfidence: Math.round(adjConf)};
+  });
+  
+  const weightedValues = sources.map(s => [s.value, Math.max(1, s.adjustedConfidence)]);
+  const chosen = weightedMedian(weightedValues);
+  const nums = sources.map(s => s.value);
+  const spread = nums.length >= 2 ? Math.max(...nums) - Math.min(...nums) : 0;
+  const avgConf = sources.reduce((s, c) => s + c.adjustedConfidence, 0) / sources.length;
+  
+  let status, confidence, message;
+  if (nums.length >= 2) {
+    if (spread <= tolerance) [status, confidence, message] = ["verified", Math.min(96, avgConf + 12), "多源一致"];
+    else if (spread <= tolerance * 2) [status, confidence, message] = ["divergent", Math.max(45, avgConf - 15), "多源轻微冲突"];
+    else [status, confidence, message] = ["conflict", Math.max(25, avgConf - 35), "多源严重冲突"];
+  } else {
+    [status, confidence, message] = ["single_external", Math.min(78, avgConf), "单一源"];
+  }
+  
+  return {
+    metric: metricKey,
+    value: chosen !== null ? Math.round(chosen * 100) / 100 : null,
+    confidence: Math.round(confidence),
+    status,
+    spread: Math.round(spread * 100) / 100,
+    sourceCount: sources.length,
+    sources,
+    staleSourceCount: sources.filter(s => s.freshnessStatus === "stale" || s.freshnessStatus === "very_stale").length,
+    message
+  };
+}
+
+function scoreMetric(value, metricKey) {
+  if (value === null) return null;
+  return getScoreFunc(metricKey)(value);
+}
+
+function normalizedWeightedScore(metricScores) {
+  const totalWeight = METRICS.reduce((s, m) => s + m.weight, 0);
+  let availWeight = 0, weighted = 0;
+  for (const m of METRICS) {
+    const s = metricScores[m.key];
+    if (s === null || s === undefined) continue;
+    availWeight += m.weight;
+    weighted += s * m.weight;
+  }
+  const coverage = availWeight / totalWeight;
+  if (coverage < 0.60) return [null, Math.round(coverage * 100)];
+  return [Math.round(weighted / availWeight), Math.round(coverage * 100)];
+}
+
+function hardTriggers(values, prevScore, score) {
+  const hard = [];
+  const v = k => values[k];
+  if (v("pePct") !== null && v("pePct") >= 90) hard.push("PE 分位 ≥90%");
+  if (v("pbPct") !== null && v("pbPct") >= 90) hard.push("PB 分位 ≥90%");
+  if (v("dividendYieldPct") !== null && v("dividendYieldPct") <= 15) hard.push("股息率分位 ≤15%");
+  if (v("erp") !== null && v("erp") < 2) hard.push("ERP <2%");
+  if (v("marginFloat") !== null && v("marginFloat") >= 4.5) hard.push("两融/流通市值 ≥4.5%");
+  if (v("marginBuy") !== null && v("marginBuy") >= 12) hard.push("融资买入占比 ≥12%");
+  if (v("leverageYoy") !== null && v("leverageYoy") >= 50) hard.push("两融同比 ≥50%");
+  if (v("fundFlowPct") !== null && v("fundFlowPct") >= 90) hard.push("基金/ETF资金热度 ≥90%");
+  if (v("epsRevision") !== null && v("epsRevision") <= -5) hard.push("盈利预测3个月下修 ≤-5%");
+  if (score !== null && prevScore !== null && score - prevScore >= 12) hard.push(`风险分较上月上升 ${score - prevScore} 分`);
+  return hard;
+}
+
+function alertLevel(score, hardCount, dataConf, conflictCount, coverage) {
+  if (score === null || coverage < 60 || dataConf < 45 || conflictCount >= 3) 
+    return {level: "复核", class: "purple", action: "暂停建议", rank: 6};
+  if (score >= 80 || hardCount >= 5) return {level: "防守", class: "darkred", action: "高度防守", rank: 5};
+  if (score >= 70 || hardCount >= 4) return {level: "减仓", class: "red", action: "主动降低风险暴露", rank: 4};
+  if (score >= 55 || hardCount >= 3) return {level: "预警", class: "orange", action: "停止追高", rank: 3};
+  if (score >= 40 || hardCount >= 1) return {level: "观察", class: "yellow", action: "谨慎持有", rank: 2};
+  return {level: "绿色", class: "green", action: "可研究/可配置", rank: 1};
+}
+
+function targetPosition(assetType, score, hardCount, dataConf, conflictCount, coverage) {
+  if (score === null || coverage < 60 || dataConf < 45 || conflictCount >= 3) return null;
+  const factor = assetType === "宽基" ? 0.72 : assetType === "海外" ? 0.82 : assetType === "行业" ? 0.95 : 1.12;
+  let pos = Math.max(0, Math.min(100, Math.round(100 - score * factor - hardCount * 5)));
+  if (score >= 80 || hardCount >= 5) pos = Math.min(pos, 10);
+  if (score >= 70 || hardCount >= 4) pos = Math.min(pos, 25);
+  return pos;
+}
+
+function calcOpportunity(values, metricScores, riskScore, dataConf, coverage) {
+  const required = ["pePct", "pbPct", "dividendYieldPct", "erp", "fundFlowPct", "epsRevision"];
+  if (required.some(k => metricScores[k] === null) || riskScore === null || coverage < 60) return null;
+  const valuationLow = Math.max(0, Math.round((100 - (metricScores["pePct"] * 0.42 + metricScores["pbPct"] * 0.25 + metricScores["erp"] * 0.18 + metricScores["dividendYieldPct"] * 0.15))));
+  const eps = values["epsRevision"];
+  const earnings = eps >= 5 ? 80 : eps >= 0 ? 65 : eps >= -5 ? 40 : 20;
+  const sentimentCold = Math.max(0, 100 - metricScores["fundFlowPct"]);
+  const riskPenalty = Math.max(0, 100 - riskScore);
+  const confidenceAdj = dataConf / 100;
+  const score = (valuationLow * 0.35 + earnings * 0.25 + sentimentCold * 0.15 + riskPenalty * 0.25) * confidenceAdj;
+  return Math.round(Math.max(0, Math.min(100, score)));
+}
+
+function moduleScore(metricScores, module) {
+  const ms = METRICS.filter(m => m.module === module && metricScores[m.key] !== null);
+  if (!ms.length) return null;
+  const wsum = ms.reduce((s, m) => s + m.weight, 0);
+  return Math.round(ms.reduce((s, m) => s + metricScores[m.key] * m.weight / wsum, 0));
+}
+
+function calcAsset(asset) {
+  const metricResults = {}, values = {}, metricScores = {};
+  
+  for (const m of METRICS) {
+    const cons = consensus(m.key, asset.manual_sources?.[m.key], m);
+    metricResults[m.key] = cons;
+    values[m.key] = cons.value;
+    metricScores[m.key] = scoreMetric(cons.value, m.key);
+  }
+  
+  const [score, coverage] = normalizedWeightedScore(metricScores);
+  const prevRaw = asset.prevScore;
+  const acceleration = score !== null && prevRaw !== null ? score - prevRaw : null;
+  const hard = hardTriggers(values, prevRaw, score);
+  
+  const moduleScores = {};
+  for (const mod of ["估值", "杠杆", "流动性", "情绪", "盈利"]) {
+    moduleScores[mod] = moduleScore(metricScores, mod);
+  }
+  
+  const availConf = METRICS.filter(m => metricResults[m.key].status !== "missing")
+    .map(m => metricResults[m.key].confidence);
+  const baseConf = availConf.length ? availConf.reduce((s, c) => s + c, 0) / availConf.length : 0;
+  const dataConf = Math.round(baseConf * (coverage / 100));
+  
+  const conflictCount = METRICS.filter(m => ["conflict", "divergent"].includes(metricResults[m.key].status)).length;
+  const missingCount = METRICS.filter(m => metricResults[m.key].status === "missing").length;
+  const manualOnlyCount = METRICS.filter(m => metricResults[m.key].status === "manual_only").length;
+  
+  const al = alertLevel(score, hard.length, dataConf, conflictCount, coverage);
+  const pos = targetPosition(asset.type || "行业", score, hard.length, dataConf, conflictCount, coverage);
+  
+  const riskBudgetUpper = pos !== null ? pos : null;
+  const riskBudgetDisplay = pos !== null ? `0%~${pos}%` : "暂停建议";
+  
+  const evidence = [];
+  for (const h of hard) evidence.push({type: "硬触发", text: h});
+  for (const m of METRICS) {
+    const ms = metricScores[m.key];
+    if (metricResults[m.key].status === "missing") {
+      evidence.push({type: "数据缺失", text: `${m.label} 缺失`});
+    }
+    if (ms !== null && ms >= 80) evidence.push({type: "风险证据", text: `${m.label} 风险分 ${ms}`});
+  }
+  if (coverage < 60) evidence.push({type: "覆盖率不足", text: `仅 ${coverage}%，暂停仓位建议`});
+  if (!evidence.length) evidence.push({type: "正常", text: "暂无硬触发器"});
+  
+  const oppScore = calcOpportunity(values, metricScores, score, dataConf, coverage);
+  
+  return {
+    name: asset.name,
+    type: asset.type,
+    riskScore: score,
+    riskScoreDisplay: score !== null ? score : "不可判定",
+    prevScore: prevRaw,
+    acceleration,
+    values,
+    metricScores,
+    metricResults,
+    moduleScores,
+    hardTriggers: hard,
+    hardTriggerCount: hard.length,
+    dataConfidence: dataConf,
+    coveragePct: coverage,
+    conflictCount,
+    missingCount,
+    manualOnlyCount,
+    alert: al,
+    targetPosition: pos,
+    targetPositionUpper: riskBudgetUpper,
+    targetPositionDisplay: riskBudgetDisplay,
+    evidence,
+    opportunityScore: oppScore,
+    opportunityScoreDisplay: oppScore !== null ? oppScore : "不可判定",
+    updatedAt: now()
+  };
+}
+
+// =============================================
+// 组合计算
+// =============================================
+function buildPortfolio(assets, holdings) {
+  const byName = {};
+  for (const a of assets) byName[a.name] = a;
+  
+  const total = holdings.reduce((s, h) => s + h.value, 0) || 1;
+  const enriched = [];
+  let weightedRisk = 0, matchedWeight = 0;
+  
+  for (const h of holdings) {
+    const a = byName[h.asset];
+    const weight = h.value / total * 100;
+    
+    if (a && a.riskScore !== null) {
+      const risk = a.riskScore;
+      weightedRisk += weight * risk / 100;
+      matchedWeight += weight;
+      
+      const targetUpper = a.targetPositionUpper;
+      const maxValue = targetUpper !== null ? total * targetUpper / 100 : null;
+      const adjust = maxValue !== null ? maxValue - h.value : null;
+      
+      enriched.push({
+        ...h,
+        weight: Math.round(weight * 100) / 100,
+        matched: true,
+        riskScore: risk,
+        alert: a.alert,
+        targetPositionUpper: targetUpper,
+        riskBudgetUpperValue: maxValue !== null ? Math.round(maxValue * 100) / 100 : null,
+        adjustAmount: adjust !== null ? Math.round(adjust * 100) / 100 : null,
+        riskContribution: Math.round(weight * risk / 100 * 100) / 100,
+        discipline: adjust !== null ? (adjust < 0 ? "高于风险预算上限，考虑分批降低" : "低于风险预算上限") : "暂停建议"
+      });
+    } else {
+      enriched.push({
+        ...h,
+        weight: Math.round(weight * 100) / 100,
+        matched: false,
+        riskScore: null,
+        alert: {level: "未知", action: "补充数据"},
+        targetPositionUpper: null,
+        riskBudgetUpperValue: null,
+        adjustAmount: null,
+        riskContribution: null,
+        discipline: "资产未匹配"
+      });
+    }
+  }
+  
+  enriched.sort((a, b) => (b.riskContribution || 0) - (a.riskContribution || 0));
+  const portfolioRisk = matchedWeight > 0 ? Math.round(weightedRisk / matchedWeight * 100) : null;
+  
+  return {
+    totalValue: Math.round(total * 100) / 100,
+    portfolioRisk,
+    portfolioRiskDisplay: portfolioRisk !== null ? portfolioRisk : "不可判定",
+    matchedWeight: Math.round(matchedWeight * 100) / 100,
+    holdings: enriched,
+    topRiskContributors: enriched.slice(0, 5)
+  };
+}
+
+function stressTest(portfolio) {
+  const scenarios = [
+    {name: "温和回撤", shocks: {宽基: -8, 行业: -12, 主题: -18, 海外: -10}},
+    {name: "中性压力", shocks: {宽基: -18, 行业: -25, 主题: -35, 海外: -22}},
+    {name: "极端踩踏", shocks: {宽基: -30, 行业: -40, 主题: -55, 海外: -35}},
+  ];
+  
+  return {
+    portfolioValue: portfolio.totalValue,
+    results: scenarios.map(sc => {
+      let loss = 0;
+      const items = portfolio.holdings.filter(h => h.matched).map(h => {
+        const shockPct = sc.shocks[h.type] || -20;
+        const riskMult = 0.70 + (h.riskScore || 50) / 100;
+        const shock = shockPct / 100 * riskMult;
+        const itemLoss = h.value * shock;
+        loss += itemLoss;
+        return {asset: h.asset, shock: Math.round(shock * 1000) / 10, loss: Math.round(itemLoss * 100) / 100};
+      });
+      return {
+        scenario: sc.name,
+        loss: Math.round(loss * 100) / 100,
+        lossPct: Math.round(loss / portfolio.totalValue * 10000) / 100,
+        items: items.sort((a, b) => a.loss - b.loss).slice(0, 5)
+      };
+    })
+  };
+}
+
+// =============================================
+// 回测
+// =============================================
+function parseBacktestRows(text) {
+  const rows = [];
+  for (const line of text.split('\n')) {
+    const parts = line.split(',').map(p => p.trim());
+    if (parts.length < 3 || parts[0].toLowerCase() === 'date' || !parts[0]) continue;
+    const ret = safeFloat(parts[1]);
+    const score = safeFloat(parts[2]);
+    if (ret === null || score === null) continue;
+    rows.push({date: parts[0], return: ret / 100, riskScore: score});
+  }
+  return rows;
+}
+
+function runBacktest(text) {
+  const rows = parseBacktestRows(text);
+  if (!rows.length) return {error: "没有有效数据"};
+  
+  let bh = 1, model = 1;
+  const bhEq = [1], modelEq = [1];
+  
+  for (const r of rows) {
+    bh *= (1 + r.return);
+    const pos = r.riskScore < 40 ? 1 : r.riskScore < 55 ? 0.75 : r.riskScore < 70 ? 0.5 : r.riskScore < 80 ? 0.25 : 0.08;
+    model *= (1 + r.return * pos);
+    bhEq.push(bh);
+    modelEq.push(model);
+  }
+  
+  function maxDD(eq) {
+    let peak = eq[0], dd = 0;
+    for (const v of eq) {
+      peak = Math.max(peak, v);
+      dd = Math.min(dd, v / peak - 1);
+    }
+    return dd;
+  }
+  
+  return {
+    months: rows.length,
+    buyHoldReturn: Math.round((bh - 1) * 10000) / 100,
+    modelReturn: Math.round((model - 1) * 10000) / 100,
+    buyHoldMaxDrawdown: Math.round(maxDD(bhEq) * 10000) / 100,
+    modelMaxDrawdown: Math.round(maxDD(modelEq) * 10000) / 100,
+  };
+}
+
+// =============================================
+// UI 渲染
+// =============================================
+let DASH = null, SELECTED = null;
+let SORT_COL = null;
+let SORT_ASC = true;
+
+function esc(v) {
+  return String(v ?? "").replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+
+function cls(level) {
+  return level === "复核" ? "purple" : level === "防守" ? "darkred" : level === "减仓" ? "red" : level === "预警" ? "orange" : level === "观察" ? "yellow" : "green";
+}
+
+function money(x) {
+  return Number(x || 0).toLocaleString("zh-CN", {maximumFractionDigits: 0});
+}
+
+function display(v) {
+  return v === null || v === undefined ? "不可判定" : esc(v);
+}
+
+function scoreBar(score) {
+  if (typeof score !== "number" || isNaN(score)) return 0;
+  return Math.max(0, Math.min(100, score));
+}
+
+function setText(id, v) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = v ?? "-";
+}
+
+function sortAssets(assets, col) {
+  if (SORT_COL === col) {
+    SORT_ASC = !SORT_ASC;
+  } else {
+    SORT_COL = col;
+    SORT_ASC = true;
+  }
+  
+  // 更新表头的排序图标
+  document.querySelectorAll('th .sort-icon').forEach(icon => {
+    icon.textContent = '↕';
+  });
+  const th = document.querySelector(`th[onclick="sortBy('${col}')"] .sort-icon`);
+  if (th) th.textContent = SORT_ASC ? '↑' : '↓';
+  
+  return [...assets].sort((a, b) => {
+    let va, vb;
+    switch(col) {
+      case 'name': va = a.name; vb = b.name; break;
+      case 'type': va = a.type; vb = b.type; break;
+      case 'riskScore': va = a.riskScore ?? -1; vb = b.riskScore ?? -1; break;
+      case 'alert': va = a.alert.rank; vb = b.alert.rank; break;
+      case 'coverage': va = a.coveragePct; vb = b.coveragePct; break;
+      case 'confidence': va = a.dataConfidence; vb = b.dataConfidence; break;
+      case 'missing': va = a.missingCount; vb = b.missingCount; break;
+      case 'conflict': va = a.conflictCount; vb = b.conflictCount; break;
+      default: return 0;
+    }
+    if (va < vb) return SORT_ASC ? -1 : 1;
+    if (va > vb) return SORT_ASC ? 1 : -1;
+    return 0;
+  });
+}
+
+function sortIcon(col) {
+  if (SORT_COL !== col) return ' ↕';
+  return SORT_ASC ? ' ↑' : ' ↓';
+}
+
+function renderDashboard() {
+  const assets = DASH.assets;
+  
+  setText("dataTime", BUILD_TIME);
+  setText("version", VERSION);
+  
+  const validScores = assets.filter(a => a.riskScore !== null).map(a => a.riskScore);
+  setText("assetCount", assets.length);
+  setText("avgRisk", validScores.length ? Math.round(validScores.reduce((s, v) => s + v, 0) / validScores.length) : "-");
+  setText("avgConf", Math.round(assets.reduce((s, a) => s + a.dataConfidence, 0) / assets.length));
+  setText("defenseCount", assets.filter(a => a.alert.rank >= 4 && a.alert.level !== "复核").length);
+  setText("reviewCount", assets.filter(a => a.alert.level === "复核").length);
+  setText("warningCount", assets.filter(a => a.alert.rank === 3).length);
+  setText("conflictCount", assets.reduce((s, a) => s + a.conflictCount, 0));
+  
+  // 搜索过滤
+  const search = document.getElementById("search").value.toLowerCase();
+  let filtered = search ? assets.filter(a => a.name.includes(search)) : assets;
+  
+  // 排序
+  if (SORT_COL) {
+    filtered = sortAssets(filtered, SORT_COL);
+  }
+  
+  // 资产表格
+  const tbody = document.getElementById("assetBody");
+  tbody.innerHTML = filtered.map(a => `
+    <tr class="${SELECTED === a.name ? 'selected' : ''}" onclick="selectAsset('${esc(a.name)}')">
+      <td><span class="asset-name">${esc(a.name)}</span></td>
+      <td><span class="pill type">${esc(a.type)}</span></td>
+      <td>
+        ${a.riskScore !== null ? `<span class="bar"><span style="width:${scoreBar(a.riskScore)}%"></span></span>${a.riskScore}` : "不可判定"}
+      </td>
+      <td><span class="pill ${cls(a.alert.level)}">${esc(a.alert.level)}</span></td>
+      <td>${a.coveragePct}%</td>
+      <td>${a.dataConfidence}%</td>
+      <td>${a.missingCount}</td>
+      <td>${a.conflictCount}</td>
+      <td>${a.hardTriggerCount}</td>
+      <td>${a.targetPositionDisplay}</td>
+      <td>${a.opportunityScoreDisplay}</td>
+      <td>${esc(a.alert.action)}</td>
+      <td>${a.moduleScores["估值"] ?? "-"}</td>
+      <td>${a.moduleScores["杠杆"] ?? "-"}</td>
+      <td>${a.moduleScores["情绪"] ?? "-"}</td>
+    </tr>
+  `).join("");
+  
+  document.getElementById("status").textContent = `已加载 ${filtered.length} 个资产`;
+}
+
+function selectAsset(name) {
+  SELECTED = name;
+  const asset = DASH.assets.find(a => a.name === name);
+  if (!asset) return;
+  
+  const detail = document.getElementById("assetDetail");
+  detail.innerHTML = `
+    <h2>${esc(asset.name)} <span class="pill ${cls(asset.alert.level)}">${esc(asset.alert.level)}</span></h2>
+    <div class="opgrid">
+      <div class="op"><div class="label">风险分</div><div class="value">${asset.riskScoreDisplay}</div></div>
+      <div class="op"><div class="label">机会分</div><div class="value">${asset.opportunityScoreDisplay}</div></div>
+      <div class="op"><div class="label">覆盖率</div><div class="value">${asset.coveragePct}%</div></div>
+      <div class="op"><div class="label">置信度</div><div class="value">${asset.dataConfidence}%</div></div>
+    </div>
+    <p class="note">风险预算：${asset.targetPositionDisplay}</p>
+    <h3>硬触发器 (${asset.hardTriggerCount})</h3>
+    <div class="evidence"><ul>${asset.hardTriggers.map(h => `<li>${esc(h)}</li>`).join("") || "<li>暂无</li>"}</ul></div>
+    <h3>证据链</h3>
+    <div class="evidence"><ul>${asset.evidence.map(e => `<li><strong>[${esc(e.type)}]</strong> ${esc(e.text)}</li>`).join("")}</ul></div>
+    <h3>各指标详情</h3>
+    <div class="table-wrap scroll">
+      <table class="source-table">
+        <thead><tr><th>指标</th><th>模块</th><th>值</th><th>风险分</th><th>来源</th><th>新鲜度</th><th>状态</th></tr></thead>
+        <tbody>
+          ${METRICS.map(m => {
+            const r = asset.metricResults[m.key];
+            return `<tr>
+              <td>${esc(m.label)}</td>
+              <td>${esc(m.module)}</td>
+              <td>${r.value !== null ? r.value : "-"}</td>
+              <td>${asset.metricScores[m.key] ?? "-"}</td>
+              <td>${r.sources.map(s => esc(s.source)).join(", ") || "-"}</td>
+              <td>${r.sources[0]?.freshnessStatus || "-"}</td>
+              <td>${esc(r.status)}</td>
+            </tr>`;
+          }).join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
+  
+  // 重新渲染主表以更新选中状态
+  renderDashboard();
+}
+
+function renderPortfolio() {
+  const text = document.getElementById("portfolioText").value;
+  const holdings = [];
+  for (const line of text.split('\n')) {
+    const parts = line.split(',').map(p => p.trim());
+    if (parts.length >= 2 && parts[0] && safeFloat(parts[1]) > 0) {
+      holdings.push({asset: parts[0], value: safeFloat(parts[1]), notes: parts[2] || ""});
+    }
+  }
+  
+  const portfolio = buildPortfolio(DASH.assets, holdings);
+  document.getElementById("portfolioSummary").innerHTML = `
+    <p><strong>组合总市值：</strong>${money(portfolio.totalValue)} 元</p>
+    <p><strong>组合风险分：</strong>${portfolio.portfolioRiskDisplay}</p>
+    <p><strong>有效匹配仓位：</strong>${portfolio.matchedWeight}%</p>
+  `;
+  
+  document.getElementById("portfolioBody").innerHTML = portfolio.holdings.map(h => `
+    <tr>
+      <td>${esc(h.asset)}</td>
+      <td>${money(h.value)}</td>
+      <td>${h.weight}%</td>
+      <td>${h.riskScore ?? "-"}</td>
+      <td><span class="pill ${cls(h.alert.level)}">${esc(h.alert.level)}</span></td>
+      <td>${h.targetPositionUpper !== null ? `0%~${h.targetPositionUpper}%` : "暂停建议"}</td>
+      <td>${h.adjustAmount !== null ? (h.adjustAmount > 0 ? `+${money(h.adjustAmount)}` : money(h.adjustAmount)) : "-"}</td>
+      <td>${h.riskContribution ?? "-"}</td>
+    </tr>
+  `).join("");
+}
+
+function renderLowRadar() {
+  const assets = DASH.assets.filter(a => a.opportunityScore !== null).sort((a, b) => b.opportunityScore - a.opportunityScore);
+  document.getElementById("lowBody").innerHTML = assets.map(a => `
+    <tr>
+      <td>${esc(a.name)}</td>
+      <td><span class="pill type">${esc(a.type)}</span></td>
+      <td>${a.opportunityScore}</td>
+      <td>${a.riskScoreDisplay}</td>
+      <td><span class="pill ${cls(a.alert.level)}">${esc(a.alert.level)}</span></td>
+      <td>${a.coveragePct}%</td>
+      <td>${a.dataConfidence}%</td>
+      <td>${a.targetPositionDisplay}</td>
+    </tr>
+  `).join("");
+}
+
+function renderStress() {
+  const text = document.getElementById("portfolioText").value;
+  const holdings = [];
+  for (const line of text.split('\n')) {
+    const parts = line.split(',').map(p => p.trim());
+    if (parts.length >= 2 && parts[0] && safeFloat(parts[1]) > 0) {
+      holdings.push({asset: parts[0], value: safeFloat(parts[1]), type: DASH.assets.find(a => a.name === parts[0])?.type || "行业"});
+    }
+  }
+  
+  const portfolio = buildPortfolio(DASH.assets, holdings);
+  const stress = stressTest(portfolio);
+  
+  document.getElementById("stressBody").innerHTML = stress.results.map(s => `
+    <tr>
+      <td><strong>${esc(s.scenario)}</strong></td>
+      <td>${money(Math.abs(s.loss))} 元</td>
+      <td>${s.lossPct}%</td>
+      <td>${s.items.slice(0, 3).map(i => `${esc(i.asset)}(${i.shock}%)`).join(", ")}</td>
+    </tr>
+  `).join("");
+}
+
+function renderReport() {
+  const assets = DASH.assets;
+  const high = assets.filter(a => a.alert.rank >= 4);
+  const warning = assets.filter(a => a.alert.rank === 3);
+  const review = assets.filter(a => a.alert.level === "复核");
+  const low = assets.filter(a => a.opportunityScore !== null).sort((a, b) => b.opportunityScore - a.opportunityScore).slice(0, 5);
+  
+  let lines = [
+    "# 每周投资体检报告",
+    "",
+    `生成时间：${now()}`,
+    `资产数量：${assets.length}`,
+    "",
+    "## 一、主要风险",
+    ...high.map(a => `- ${a.name}：风险分 ${a.riskScoreDisplay}，${a.alert.level}，硬触发 ${a.hardTriggerCount} 个`),
+    high.length ? "" : "- 暂无减仓/防守级别资产。",
+    "",
+    "## 二、需要复核",
+    ...review.map(a => `- ${a.name}：${a.alert.action}，覆盖率 ${a.coveragePct}%，置信度 ${a.dataConfidence}%`),
+    review.length ? "" : "- 暂无复核级资产。",
+    "",
+    "## 三、预警观察",
+    ...warning.map(a => `- ${a.name}：风险分 ${a.riskScoreDisplay}，建议 ${a.alert.action}`),
+    warning.length ? "" : "- 暂无预警级别资产。",
+    "",
+    "## 四、低估机会",
+    ...low.map(a => `- ${a.name}：机会分 ${a.opportunityScore}，风险分 ${a.riskScoreDisplay}，${a.alert.level}`),
+    "",
+    "## 五、纪律提示",
+    "- 风险预算上限不是买卖指令，只用于控制暴露。",
+    "- 数据覆盖率低于60%、置信度低于45时，先复核数据。",
+  ];
+  
+  document.getElementById("reportBox").textContent = lines.flat().join("\n");
+}
+
+// =============================================
+// 初始化
+// =============================================
+function sortBy(col) {
+  sortAssets(DASH.assets, col);
+  renderDashboard();
+}
+
+function init() {
+  // 计算所有资产
+  DASH = {
+    assets: ASSETS_DATA.assets.map(calcAsset),
+    updatedAt: now()
+  };
+  
+  // Tab 切换
+  document.querySelectorAll(".tab").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+      btn.classList.add("active");
+      document.getElementById(btn.dataset.tab).classList.add("active");
+      
+      // 切换时刷新对应视图
+      if (btn.dataset.tab === "portfolio") renderPortfolio();
+      if (btn.dataset.tab === "low") renderLowRadar();
+      if (btn.dataset.tab === "stress") renderStress();
+    });
+  });
+  
+  // 刷新按钮
+  document.getElementById("refreshBtn").addEventListener("click", () => {
+    DASH = {assets: ASSETS_DATA.assets.map(calcAsset), updatedAt: now()};
+    SELECTED = null;
+    document.getElementById("assetDetail").innerHTML = "请点击左侧资产。";
+    renderDashboard();
+  });
+  
+  // 搜索
+  document.getElementById("search").addEventListener("input", renderDashboard);
+  
+  // 组合保存
+  document.getElementById("savePortfolioBtn").addEventListener("click", renderPortfolio);
+  
+  // 回测
+  document.getElementById("runBtBtn").addEventListener("click", () => {
+    const text = document.getElementById("btInput").value;
+    const result = runBacktest(text);
+    if (result.error) {
+      document.getElementById("btResult").innerHTML = `<p style="color:red">${result.error}</p>`;
+    } else {
+      document.getElementById("btResult").innerHTML = `
+        <p><strong>回测期数：</strong>${result.months} 个月</p>
+        <p><strong>买入持有收益：</strong>${result.buyHoldReturn}% (最大回撤 ${result.buyHoldMaxDrawdown}%)</p>
+        <p><strong>模型策略收益：</strong>${result.modelReturn}% (最大回撤 ${result.modelMaxDrawdown}%)</p>
+        <p><strong>收益差异：</strong>${Math.round((result.modelReturn - result.buyHoldReturn) * 100) / 100}%</p>
+      `;
+    }
+  });
+  
+  // 周报
+  document.getElementById("reportBtn").addEventListener("click", renderReport);
+  
+  // 初始渲染
+  renderDashboard();
+}
+
+// 启动
+document.addEventListener("DOMContentLoaded", init);
+</script>
+</body>
+</html>
