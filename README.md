@@ -6,6 +6,13 @@ A static ETF risk cockpit for portfolio review, risk scoring, stress testing, ba
 
 ![ETF risk cockpit preview](docs/screenshot.png)
 
+
+## Visual Tour | 图像导览
+
+| Product Highlights | Build / Remix Flow |
+|---|---|
+| ![Product highlights](docs/feature-map.png) | ![Build and remix flow](docs/workflow-map.png) |
+
 ## Why Star This | 为什么值得 Star
 
 - Shows how to design a dense but readable investment operations dashboard.
