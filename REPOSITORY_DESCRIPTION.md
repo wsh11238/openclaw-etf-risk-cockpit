@@ -1,1 +1,1 @@
-ETF 风控驾驶舱：资产风险评分、组合体检、低估雷达、压力测试、回测入口、周报预览、搜索排序和数据状态面板，适合基金投研与资产配置工具原型。
+Static ETF risk cockpit with scorecards, portfolio review, undervaluation radar, stress tests, and report previews.
