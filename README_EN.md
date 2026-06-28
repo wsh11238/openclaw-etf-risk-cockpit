@@ -6,19 +6,30 @@ A static ETF portfolio risk cockpit for scorecards, portfolio review, undervalua
 
 ![Demo](docs/demo.gif)
 
-## At A Glance
+## Understand It In 3 Seconds
 
-**A static ETF portfolio risk cockpit for scorecards, radar views, stress tests, and reports.**
+**A static ETF portfolio-risk cockpit with scorecards, radar views, stress tests, and weekly report previews.**
 
-- Includes risk scoring, portfolio review, undervaluation radar, stress testing, backtest entry points, and weekly reports.
-- Dense investment information is organized into a scannable cockpit UI.
-- Pure static files make it easy to deploy, study, and remix.
+Good fit for:
+- ETF watchlists
+- portfolio review pages
+- investment risk dashboards
+- weekly report tools
+- dense finance UI learning
 
 ## Fork It In 30 Seconds
 
 Fork it, edit `assets_data.js`, and build your own ETF watchlist, risk dashboard, or report tool.
 
-> If this saves you from rebuilding the same product skeleton later, consider starring the repo.
+Main data to replace: `assets_data.js`.
+
+## Publish And Promote It
+
+- Deployment guide: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)
+- Launch copy kit: [docs/LAUNCH_KIT.md](docs/LAUNCH_KIT.md)
+- Social preview image: [docs/social-preview.png](docs/social-preview.png)
+
+> If this template saves you from rebuilding the same product skeleton later, consider starring the repo.
 
 ## Screenshots
 
